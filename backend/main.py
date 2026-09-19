@@ -1,10 +1,15 @@
 from fastapi import FastAPI
 
+from backend.routes.ai import router as ai_router
+
+
 app = FastAPI(
     title="ClubOps AI",
     description="AI-powered event operations platform for college clubs",
     version="0.1.0"
 )
+
+app.include_router(ai_router)
 
 
 @app.get("/")
