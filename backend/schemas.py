@@ -48,3 +48,27 @@ class TaskResponse(TaskBase):
     event_id: int
 
     model_config = ConfigDict(from_attributes=True)
+
+class VolunteerBase(BaseModel):
+    name: str
+    email: str | None = None
+    role: str | None = None
+    availability: str | None = None
+
+
+class VolunteerCreate(VolunteerBase):
+    pass
+
+
+class VolunteerUpdate(BaseModel):
+    name: str | None = None
+    email: str | None = None
+    role: str | None = None
+    availability: str | None = None
+
+
+class VolunteerResponse(VolunteerBase):
+    id: int
+    event_id: int
+
+    model_config = ConfigDict(from_attributes=True)

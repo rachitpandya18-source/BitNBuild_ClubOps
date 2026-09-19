@@ -6,6 +6,7 @@ import models
 from routes.events import router as events_router
 from routes.tasks import router as tasks_router
 from routes.ai import router as ai_router
+from routes.volunteers import router as volunteers_router
 
 app = FastAPI(
     title="ClubOps AI API",
@@ -18,6 +19,8 @@ Base.metadata.create_all(bind=engine)
 app.include_router(events_router)
 app.include_router(tasks_router)
 app.include_router(ai_router)
+app.include_router(volunteers_router)
+
 
 @app.get("/")
 def root():
