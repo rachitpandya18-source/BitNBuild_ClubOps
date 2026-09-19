@@ -1,5 +1,11 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
+
+from database import get_db
+from schemas import TaskResponse
+from services.task_service import create_task_from_ai
+
 
 from ai.meeting_analyzer import (
     MeetingAnalysis,
@@ -32,6 +38,15 @@ class RiskAnalysisRequest(BaseModel):
 class AnnouncementRequest(BaseModel):
     event_information: str
 
+class MeetingTaskCreationRequest(BaseModel):
+    event_id: int
+    notes: str
+
+class MeetingTaskCreationResponse(BaseModel):
+    message: str
+    event_id: int
+    tasks_created: int
+    tasks: list[TaskResponse]
 
 @router.post(
     "/analyze-meeting",
@@ -103,6 +118,50 @@ def generate_announcement_endpoint(
         return generate_announcement(
             request.event_information
         )
+
+    except ValueError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e),
+        )
+
+    except RuntimeError as e:
+        raise HTTPException(
+            status_code=502,
+            detail=str(e),
+        )
+
+@router.post(
+    "/analyze-meeting-and-create-tasks",
+    response_model=MeetingTaskCreationResponse
+)
+def analyze_meeting_and_create_tasks(
+    request: MeetingTaskCreationRequest,
+    db: Session = Depends(get_db),
+):
+    try:
+        analysis = analyze_meeting(request.notes)
+
+        created_tasks = []
+
+        for task_data in analysis.tasks:
+            task = create_task_from_ai(
+                db=db,
+                event_id=request.event_id,
+                title=task_data.title,
+                owner=task_data.owner,
+                deadline=task_data.deadline,
+                priority=task_data.priority,
+            )
+
+            created_tasks.append(task)
+
+        return {
+            "message": "Meeting analyzed and tasks created successfully",
+            "event_id": request.event_id,
+            "tasks_created": len(created_tasks),
+            "tasks": created_tasks,
+        }
 
     except ValueError as e:
         raise HTTPException(
