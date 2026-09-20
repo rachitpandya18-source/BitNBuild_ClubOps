@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface: #faf8ff;
+  --color-surface-dim: #d2d9f4;
+  --color-surface-bright: #faf8ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f2f3ff;
+  --color-surface-container: #eaedff;
+  --color-surface-container-high: #e2e7ff;
+  --color-surface-container-highest: #dae2fd;
+  --color-on-surface: #131b2e;
+  --color-on-surface-variant: #464555;
+  --color-inverse-surface: #283044;
+  --color-inverse-on-surface: #eef0ff;
+  --color-outline: #777587;
+  --color-outline-variant: #c7c4d8;
+  --color-surface-tint: #4d44e3;
+  --color-primary: #3525cd;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #4f46e5;
+  --color-on-primary-container: #dad7ff;
+  --color-inverse-primary: #c3c0ff;
+  --color-secondary: #6b38d4;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #8455ef;
+  --color-on-secondary-container: #fffbff;
+  --color-tertiary: #3130c0;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #4b4dd8;
+  --color-on-tertiary-container: #d9d8ff;
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  --color-primary-fixed: #e2dfff;
+  --color-primary-fixed-dim: #c3c0ff;
+  --color-on-primary-fixed: #0f0069;
+  --color-on-primary-fixed-variant: #3323cc;
+  --color-secondary-fixed: #e9ddff;
+  --color-secondary-fixed-dim: #d0bcff;
+  --color-on-secondary-fixed: #23005c;
+  --color-on-secondary-fixed-variant: #5516be;
+  --color-tertiary-fixed: #e1e0ff;
+  --color-tertiary-fixed-dim: #c0c1ff;
+  --color-on-tertiary-fixed: #07006c;
+  --color-on-tertiary-fixed-variant: #2f2ebe;
+  --color-background: #faf8ff;
+  --color-on-background: #131b2e;
+  --color-surface-variant: #dae2fd;
+  
+  --font-display-lg: "Plus Jakarta Sans";
+  --font-headline-xl: "Plus Jakarta Sans";
+  --font-headline-lg: "Plus Jakarta Sans";
+  --font-headline-md: "Plus Jakarta Sans";
+  --font-title-lg: "Plus Jakarta Sans";
+  --font-title-md: "Inter";
+  --font-body-lg: "Inter";
+  --font-body-md: "Inter";
+  --font-body-sm: "Inter";
+  --font-label-lg: "Inter";
+  --font-label-md: "Inter";
+  --font-label-sm: "Inter";
+  --font-code-sm: "JetBrains Mono";
+  
+  --text-display-lg: 44px;
+  --text-headline-xl: 32px;
+  --text-headline-lg: 24px;
+  --text-headline-md: 20px;
+  --text-title-lg: 18px;
+  --text-title-md: 16px;
+  --text-body-lg: 16px;
+  --text-body-md: 14px;
+  --text-body-sm: 13px;
+  --text-label-lg: 14px;
+  --text-label-md: 12px;
+  --text-label-sm: 11px;
+  --text-code-sm: 12px;
+  
+  --radius-sm: 0.25rem;
+  --radius-DEFAULT: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+  
+  --spacing-gutter: 1.5rem;
+  --spacing-margin: 2rem;
+  --spacing-space-xs: 0.25rem;
+  --spacing-space-sm: 0.5rem;
+  --spacing-space-md: 1rem;
+  --spacing-space-lg: 1.5rem;
+  --spacing-space-xl: 2rem;
+}
+
+body {
+  font-family: var(--font-body-md);
+  color: var(--color-on-surface);
+  background-color: var(--color-surface);
+}
+
+/* Responsive polish: preserve the existing ClubOps visual system while preventing
+   narrow screens from forcing the application into horizontal overflow. */
+html, body, #root {
+  min-height: 100%;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+button,
+input,
+textarea,
+select {
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --spacing-gutter: 1rem;
+    --spacing-margin: 1rem;
+  }
+
+  .material-symbols-outlined {
+    flex-shrink: 0;
+  }
+
+  /* Keep modal footers usable on phones. */
+  .modal-footer-responsive {
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1023px) {
+  /* Tablet: keep content breathing room without changing the desktop visual language. */
+  main {
+    min-width: 0;
+  }
+}
