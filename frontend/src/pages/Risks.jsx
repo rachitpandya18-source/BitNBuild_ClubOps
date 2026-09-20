@@ -1,0 +1,21 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Modal from '../components/Modal';
+
+const initialRisks = [
+ {id:1,title:'Venue confirmation pending',severity:'Critical',owner:'Operations',due:'Sep 25',mitigation:'Confirm venue or activate backup location.',reviewed:false},
+ {id:2,title:'Volunteer shortage',severity:'High',owner:'Volunteer Lead',due:'Sep 27',mitigation:'Launch targeted recruitment drive for 10 more hands.',reviewed:false},
+ {id:3,title:'WiFi capacity constraint',severity:'High',owner:'Technical Team',due:'Sep 28',mitigation:'Request dedicated bandwidth from campus IT.',reviewed:false},
+ {id:4,title:'Catering confirmation',severity:'Medium',owner:'Logistics',due:'Sep 29',mitigation:'Finalize menu and head count with vendor.',reviewed:false},
+];
+
+export default function Risks(){
+ const navigate=useNavigate(); const [risks,setRisks]=useState(initialRisks); const [view,setView]=useState(null);
+ const review=id=>setRisks(rs=>rs.map(r=>r.id===id?{...r,reviewed:!r.reviewed}:r));
+ const cls=s=>s==='Critical'?'bg-error-container text-on-error-container':s==='High'?'bg-surface-container-high text-on-surface':'bg-surface-container text-on-surface-variant';
+ return <div className="flex flex-col gap-space-lg w-full max-w-5xl mx-auto pb-space-xl"><div className="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md"><div><h1 className="font-headline-lg text-headline-lg text-on-surface tracking-tight">Risk & Anomaly Center</h1><p className="font-body-md text-on-surface-variant mt-1">Track operational risks and mitigation actions.</p></div><button onClick={()=>navigate('/ai?tab=risks')} className="flex items-center gap-2 px-space-md py-2 rounded-xl bg-secondary-fixed text-on-secondary-fixed font-label-md hover:bg-secondary-fixed-dim shadow-sm"><span className="material-symbols-outlined text-[18px]">security</span>Detect Risks with AI</button></div>
+ <div className="grid grid-cols-2 md:grid-cols-4 gap-space-md">{[['Critical','Critical'],['High','High'],['Medium','Medium'],[risks.filter(r=>r.reviewed).length,'Resolved']].map(([v,l],i)=><div key={l} className={`p-space-md rounded-xl shadow-sm border border-outline-variant/30 flex flex-col items-center justify-center text-center ${i===0?'bg-error-container text-on-error-container':i===3?'bg-primary text-on-primary':'bg-surface-container-lowest'}`}><div className="font-headline-lg font-bold">{i<3?risks.filter(r=>r.severity===v).length:v}</div><div className="font-title-sm font-semibold mt-1">{l}</div></div>)}</div>
+ <div className="flex flex-col gap-space-sm">{risks.map(r=><div key={r.id} className={`p-space-md rounded-xl bg-surface-container-lowest shadow-sm border ${r.reviewed?'border-primary/30 opacity-70':'border-outline-variant/30'}`}><div className="flex flex-col md:flex-row md:items-center gap-3"><div className="flex-1"><div className="flex items-center gap-2"><span className={`px-2 py-0.5 rounded-full font-label-sm ${cls(r.severity)}`}>{r.severity.toUpperCase()}</span><h3 className="font-title-md text-on-surface font-semibold">{r.title}</h3></div><p className="mt-2 text-sm text-on-surface"><b>Mitigation:</b> {r.mitigation}</p><div className="mt-3 flex flex-wrap gap-4 text-sm text-on-surface-variant">Owner: {r.owner}<span>Due: {r.due}</span>{r.reviewed&&<span className="text-primary font-semibold">Reviewed</span>}</div></div><div className="flex gap-2"><button onClick={()=>setView(r)} className="px-3 py-1.5 rounded-lg border border-outline text-on-surface">View Mitigation</button><button onClick={()=>review(r.id)} className="px-3 py-1.5 rounded-lg bg-surface-container-low text-on-surface flex items-center gap-1"><span className="material-symbols-outlined text-[16px]">check_circle</span>{r.reviewed?'Mark Open':'Mark Reviewed'}</button></div></div></div>)}</div>
+ <Modal open={!!view} title={view?.title || 'Mitigation'} onClose={()=>setView(null)} footer={<button onClick={()=>setView(null)} className="px-4 py-2 rounded-lg bg-primary text-on-primary">Close</button>}><div className="space-y-3 text-sm"><p><b>Severity:</b> {view?.severity}</p><p><b>Owner:</b> {view?.owner}</p><p><b>Due:</b> {view?.due}</p><p><b>Mitigation:</b> {view?.mitigation}</p></div></Modal>
+ </div>
+}
