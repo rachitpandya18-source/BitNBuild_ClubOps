@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Modal from '../components/Modal';
-import { createTask } from '../services/api';
+import { createTask, getTasks } from '../services/api';
 export default function Tasks() {
   const navigate = useNavigate();
   const [viewMode, setViewMode] = useState('table');
@@ -9,6 +9,24 @@ export default function Tasks() {
   const [taskSaving, setTaskSaving] = useState(false);
   const [taskForm, setTaskForm] = useState({event_id:'1',title:'',description:'',owner:'',deadline:'',priority:'medium',status:'pending'});
 
+  const [tasks, setTasks] = useState([]);
+  const [tasksLoading, setTasksLoading] = useState(true);
+  const [tasksError, setTasksError] = useState('');
+
+  useEffect(() => {
+  getTasks(1)
+    .then((data) => {
+      setTasks(data);
+      console.log('Backend tasks:', data);
+    })
+    .catch((err) => {
+      setTasksError(err.message);
+      console.error('Failed to load tasks:', err);
+    })
+    .finally(() => {
+      setTasksLoading(false);
+    });
+}, []);
   return (
     <main className="relative pt-16 w-full px-space-lg bg-background flex-1"><div className="flex flex-col w-full pb-space-xl">
 
@@ -185,6 +203,30 @@ export default function Tasks() {
 </tr>
 </thead>
 <tbody className="divide-y-0 text-on-surface font-body-sm text-body-sm" id="taskTableBody">
+
+    {tasksLoading && (
+    <tr>
+      <td colSpan="8" className="p-8 text-center">
+        Loading tasks...
+      </td>
+    </tr>
+  )}
+
+  {tasksError && (
+    <tr>
+      <td colSpan="8" className="p-8 text-center text-red-500">
+        Error: {tasksError}
+      </td>
+    </tr>
+  )}
+
+  {!tasksLoading && !tasksError && tasks.length === 0 && (
+    <tr>
+      <td colSpan="8" className="p-8 text-center">
+        No tasks found.
+      </td>
+    </tr>
+  )}
 
 <tr className="group hover:bg-surface-container-low transition-colors duration-150">
 <td className="py-3.5 px-space-md">
