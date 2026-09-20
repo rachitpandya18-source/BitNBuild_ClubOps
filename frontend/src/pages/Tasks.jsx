@@ -227,7 +227,58 @@ export default function Tasks() {
       </td>
     </tr>
   )}
+{tasks.map((task) => (
+  <tr key={task.id} className="group hover:bg-surface-container-low transition-colors">
+    <td className="py-3.5 px-space-md">
+      <input className="task-checkbox rounded accent-primary cursor-pointer w-4 h-4" type="checkbox" />
+    </td>
 
+    <td className="py-3.5 px-space-md">
+      <div className="flex flex-col max-w-md">
+        <span className="font-title-md text-title-md text-on-surface font-semibold group-hover:text-primary">
+          {task.title}
+        </span>
+        <span className="text-outline font-label-sm mt-1">
+          Task #{task.id}
+        </span>
+      </div>
+    </td>
+
+    <td className="py-3.5 px-space-md">
+      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm">
+        AI Hackathon 2026
+      </span>
+    </td>
+
+    <td className="py-3.5 px-space-md">
+      <span className="font-label-md text-on-surface">
+        {task.owner || 'Unassigned'}
+      </span>
+    </td>
+
+    <td className="py-3.5 px-space-md">
+      <span className="font-label-md text-on-surface">
+        {task.deadline || 'No deadline'}
+      </span>
+    </td>
+
+    <td className="py-3.5 px-space-md">
+      <span className="px-2.5 py-0.5 rounded-full bg-surface-container-highest text-primary font-label-sm uppercase">
+        {task.priority}
+      </span>
+    </td>
+
+    <td className="py-3.5 px-space-md">
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-surface font-label-sm">
+        {task.status}
+      </span>
+    </td>
+
+    <td className="py-3.5 px-space-md text-right">
+      <span className="text-outline">AI Created</span>
+    </td>
+  </tr>
+))}
 <tr className="group hover:bg-surface-container-low transition-colors duration-150">
 <td className="py-3.5 px-space-md">
 <input className="task-checkbox rounded accent-primary cursor-pointer w-4 h-4" type="checkbox" />
