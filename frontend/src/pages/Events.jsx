@@ -1,6 +1,35 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getEvents } from '../services/api';
 export default function Events() {
   const navigate = useNavigate();
+
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    getEvents()
+      .then((data) => {
+        setEvents(data);
+      })
+      .catch((err) => {
+        setError(err.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+  return <div className="p-8">Loading events...</div>;
+}
+
+  if (error) {
+    return <div className="p-8 text-red-500">Error: {error}</div>;
+  }
+
+  const event = events[0];
 
   return (
     <main className="relative pt-16 w-full px-space-lg bg-background flex-1"><div className="flex flex-col w-full pb-space-xl">
@@ -19,7 +48,9 @@ export default function Events() {
 <span className="px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-semibold">Track: National Circuit</span>
 </div>
 <div className="flex flex-col">
-<h1 className="font-headline-xl text-headline-xl text-on-surface tracking-tight">HackQuest 2026</h1>
+<h1 className="font-headline-xl text-headline-xl text-on-surface tracking-tight">
+  {event?.name || 'Event'}
+</h1>
 <p className="font-body-md text-body-md text-on-surface-variant mt-1">36-Hour Continuous Innovation Marathon, Hardware Prototyping &amp; Enterprise Demo Pitches</p>
 </div>
 
@@ -30,7 +61,7 @@ export default function Events() {
 </div>
 <div className="flex flex-col min-w-0">
 <span className="font-label-sm text-label-sm text-outline uppercase tracking-wider">Date &amp; Schedule</span>
-<span className="font-title-md text-title-md text-on-surface truncate">Mar 28-30, 2026</span>
+<span className="font-title-md text-title-md text-on-surface truncate">{event?.date || 'Date not set'}</span>
 <span className="font-code-sm text-code-sm text-on-surface-variant">09:00 AM • 36h Sprint</span>
 </div>
 </div>
@@ -40,7 +71,7 @@ export default function Events() {
 </div>
 <div className="flex flex-col min-w-0">
 <span className="font-label-sm text-label-sm text-outline uppercase tracking-wider">Venue Anchor</span>
-<span className="font-title-md text-title-md text-on-surface truncate">Main Auditorium</span>
+<span className="font-title-md text-title-md text-on-surface truncate">{event?.venue || 'Venue not set'}</span>
 <span className="font-body-sm text-body-sm text-on-surface-variant truncate">&amp; Computer Lab 4</span>
 </div>
 </div>
